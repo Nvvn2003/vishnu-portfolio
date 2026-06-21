@@ -9,9 +9,15 @@
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const ITEMS = [
-    // Add your work here, e.g.:
-    // { src: "assets/gallery/my-poster.jpg", title: "Project — Piece", cat: "Branding" },
-    // { src: "assets/gallery/reel.mp4",      title: "Launch Film",     cat: "Motion", type: "video" },
+    { src: "assets/gallery/Pstrbyads.png",           title: "Poster Boy Ads — Brand Identity",  cat: "Branding" },
+    { src: "assets/gallery/BB Building Mockup.png",  title: "BB Building — Architectural Mock", cat: "Art Direction" },
+    { src: "assets/gallery/Demo Invite.png",         title: "Demo Invite — Event Design",       cat: "Print" },
+    { src: "assets/gallery/Atom Thumbnail.png",      title: "Atom — Content Thumbnail",         cat: "Content" },
+    { src: "assets/gallery/Ozone Thumb.png",         title: "Ozone — Content Thumbnail",        cat: "Content" },
+    { src: "assets/gallery/Fish Aqua-Recovered.png", title: "Fish Aqua — Visual Identity",      cat: "Branding" },
+    { src: "assets/gallery/Iphone Winter 1.png",     title: "iPhone Winter — Product Shoot",    cat: "Product" },
+    { src: "assets/gallery/TI MCKP.png",             title: "TI — Brand Mockup",                cat: "Brand" },
+    { src: "assets/gallery/%E0%B0%AE%E0%B0%BF%E0%B0%B8%E0%B1%8D%E0%B0%B8%E0%B0%AE%E0%B1%8D%E0%B0%AE.png", title: "Missamma — Campaign", cat: "Campaign" },
   ];
 
   const wrap = document.getElementById("galleryRows");
