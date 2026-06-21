@@ -1,0 +1,21 @@
+GALLERY — how to add your work
+================================
+
+1. Drop your image (or .mp4) into this folder (assets/gallery/).
+   - Any aspect ratio works; tiles are uniform height, variable width.
+   - Keep files reasonably sized (long edge ~1500px is plenty).
+
+2. Add ONE line to the ITEMS list in  js/gallery.js  :
+
+   { src: "assets/gallery/your-file.jpg", title: "Project — Piece", cat: "Branding" },
+
+   - For a video:  add  type: "video"  →
+     { src: "assets/gallery/reel.mp4", title: "...", cat: "Motion", type: "video" },
+
+3. That's it — it auto-distributes across the 3 scrolling rows, with a
+   title + category label, and opens in the lightbox on click.
+
+Tip: categories already used — Brand Film, Art Direction, Logo, Print,
+Packaging, Product, Campaign, Motion. Reuse or add your own.
+
+(Or just drop everything here and tell Vishnu's assistant to wire it up.)

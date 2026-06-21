@@ -1,0 +1,10 @@
+Drop your images in this folder. Use these exact filenames:
+
+  vishnu.jpg   -> your photo (3:4 portrait, ~900x1200)
+  work-1.jpg   -> project 1 (4:3, ~1200x900)
+  work-2.jpg   -> project 2
+  work-3.jpg   -> project 3
+  work-4.jpg   -> project 4
+
+Missing images fall back to styled placeholders automatically.
+You can delete this .txt file once you've added your images.
