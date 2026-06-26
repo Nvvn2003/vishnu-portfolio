@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SignalShift — Algorithm Intelligence · Vishnu Nakkella</title>
+  <meta name="description" content="Case study: SignalShift — real-time algorithm intelligence platform for content creators. Built by Vishnu Nakkella." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    /* ── SignalShift-specific components ── */
+    .ss-plat-bar {
+      background: var(--bg-soft);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 1rem var(--pad);
+      overflow-x: auto;
+      white-space: nowrap;
+      margin-bottom: clamp(3rem, 7vw, 5rem);
+    }
+    .ss-plat-inner { display: inline-flex; gap: 8px; }
+    .ss-pb {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px; border-radius: 6px;
+      border: 1px solid var(--line); background: var(--bg);
+      font-size: 0.8rem; font-weight: 500; color: var(--ink-dim);
+    }
+    .ss-pb-score {
+      font-size: 0.72rem; font-weight: 700; padding: 2px 7px; border-radius: 99px;
+    }
+    .ss-pb.up .ss-pb-score { background: rgba(29,185,126,.1); color: #1DB97E; border: 1px solid rgba(29,185,126,.22); }
+    .ss-pb.mid .ss-pb-score { background: rgba(236,233,224,.06); color: var(--ink-dim); border: 1px solid var(--line); }
+    .ss-pb.dn .ss-pb-score { background: rgba(232,83,74,.1); color: #E8534A; border: 1px solid rgba(232,83,74,.22); }
+
+    /* prob cards */
+    .ss-prob-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    .ss-prob-card {
+      padding: 28px; background: var(--bg-soft);
+      border: 1px solid var(--line); border-radius: 12px;
+      position: relative; overflow: hidden;
+    }
+    .ss-prob-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+    .ss-prob-card.r::before { background: linear-gradient(90deg,#E8534A,transparent); }
+    .ss-prob-card.a::before { background: linear-gradient(90deg,var(--accent),transparent); }
+    .ss-prob-card.b::before { background: linear-gradient(90deg,rgba(236,233,224,.25),transparent); }
+    .ss-prob-num { font-size: 0.68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 10px; }
+    .ss-prob-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 8px; color: var(--ink); }
+    .ss-prob-desc { font-size: 0.82rem; color: var(--ink-dim); line-height: 1.7; }
+
+    /* score rings */
+    .ss-scores-wrap { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; margin-bottom: 32px; }
+    .ss-score-card {
+      background: var(--bg-soft); border: 1px solid var(--line);
+      border-radius: 12px; padding: 18px; text-align: center;
+    }
+    .ss-score-ring { width: 72px; height: 72px; margin: 0 auto 10px; position: relative; }
+    .ss-score-ring svg { width: 72px; height: 72px; }
+    .ss-score-num {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      font-family: var(--font-display); font-size: 1rem; font-weight: 800; line-height: 1;
+    }
+    .ss-sc-name { font-size: 0.75rem; font-weight: 600; color: var(--ink-dim); margin-bottom: 5px; }
+    .ss-sc-badge { font-size: 0.65rem; font-weight: 700; padding: 2px 8px; border-radius: 99px; text-transform: uppercase; letter-spacing: .04em; }
+    .ss-sc-badge.up { background: rgba(29,185,126,.1); color: #1DB97E; border: 1px solid rgba(29,185,126,.2); }
+    .ss-sc-badge.mid { background: rgba(236,233,224,.06); color: var(--ink-dim); border: 1px solid var(--line); }
+    .ss-sc-badge.dn { background: rgba(232,83,74,.1); color: #E8534A; border: 1px solid rgba(232,83,74,.2); }
+
+    /* signal bars */
+    .ss-sig-box { background: var(--bg-soft); border: 1px solid var(--line); border-radius: 12px; padding: 28px; }
+    .ss-sig-label-row { font-size: 0.72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 20px; }
+    .ss-sig-row { display: grid; grid-template-columns: 200px 60px 1fr; align-items: center; gap: 14px; margin-bottom: 12px; }
+    .ss-sig-label { font-size: 0.82rem; color: var(--ink-dim); }
+    .ss-sig-pct { font-size: 0.82rem; font-weight: 700; color: var(--ink); text-align: right; }
+    .ss-sig-track { height: 5px; background: rgba(236,233,224,.07); border-radius: 99px; overflow: hidden; }
+    .ss-sig-fill { height: 5px; border-radius: 99px; background: var(--accent); }
+
+    /* feature cards */
+    .ss-feat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .ss-feat-card {
+      padding: 28px; background: var(--bg-soft);
+      border: 1px solid var(--line); border-radius: 14px;
+      position: relative; overflow: hidden;
+    }
+    .ss-feat-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg,rgba(255,92,0,.4),transparent);
+    }
+    .ss-feat-icon {
+      width: 42px; height: 42px; border-radius: 10px;
+      background: rgba(255,92,0,.08); border: 1px solid rgba(255,92,0,.2);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px; font-size: 18px;
+    }
+    .ss-feat-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 7px; }
+    .ss-feat-desc { font-size: 0.82rem; color: var(--ink-dim); line-height: 1.7; }
+    .ss-feat-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 12px; }
+    .ss-chip {
+      font-size: 0.68rem; font-weight: 500; padding: 2px 9px; border-radius: 99px;
+      border: 1px solid var(--line); background: rgba(236,233,224,.04);
+      color: var(--ink-dim);
+    }
+
+    /* callout */
+    .ss-callout {
+      background: rgba(255,92,0,.05); border: 1px solid rgba(255,92,0,.18);
+      border-radius: 10px; padding: 20px 24px;
+      display: flex; gap: 14px; align-items: flex-start; margin: 28px 0;
+      font-size: 0.9rem; color: var(--ink-dim); line-height: 1.75;
+    }
+    .ss-callout strong { color: var(--ink); font-weight: 600; }
+
+    /* decisions */
+    .ss-decision {
+      display: grid; grid-template-columns: 200px 1fr; gap: 20px;
+      padding: 20px 24px; background: var(--bg-soft);
+      border: 1px solid var(--line); border-radius: 10px; margin-bottom: 10px;
+    }
+    .ss-decision-k { font-size: 0.85rem; font-weight: 600; color: var(--ink); }
+    .ss-decision-v { font-size: 0.85rem; color: var(--ink-dim); line-height: 1.7; }
+
+    /* stack grid */
+    .ss-stack-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+    .ss-stack-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 16px; background: var(--bg-soft);
+      border: 1px solid var(--line); border-radius: 10px;
+    }
+    .ss-stack-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: rgba(236,233,224,.05);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; flex-shrink: 0; color: var(--ink-dim); font-weight: 700;
+    }
+    .ss-stack-name { font-size: 0.82rem; font-weight: 600; }
+    .ss-stack-role { font-size: 0.72rem; color: var(--ink-dim); margin-top: 1px; }
+
+    /* fmt table */
+    .ss-fmt-table { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
+    .ss-fmt-table th { background: var(--bg-soft); padding: 10px 16px; font-size: 0.72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-dim); text-align: left; border-bottom: 1px solid var(--line); }
+    .ss-fmt-table td { padding: 10px 16px; font-size: 0.82rem; color: var(--ink-dim); border-bottom: 1px solid var(--line); }
+    .ss-fmt-table tr:last-child td { border-bottom: none; }
+    .ss-fmt-table td:first-child { color: var(--ink); font-weight: 600; }
+
+    /* section blocks reused for SS */
+    .ss-section { padding: clamp(3rem, 6vw, 5rem) 0; border-top: 1px solid var(--line); }
+    .ss-section-label { font-size: 0.72rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .ss-section-h { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.6rem, 3vw, 2.5rem); letter-spacing: -.025em; margin-bottom: 14px; }
+    .ss-section-sub { font-size: 0.9rem; color: var(--ink-dim); line-height: 1.8; max-width: 58ch; margin-bottom: 32px; }
+
+    /* buttons */
+    .ss-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .ss-btn-p {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 22px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;
+      background: var(--accent); color: var(--bg); cursor: pointer;
+      transition: background .2s, transform .2s;
+    }
+    .ss-btn-p:hover { background: #ff7a30; transform: translateY(-1px); }
+    .ss-btn-g {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 22px; border-radius: 6px; font-size: 0.85rem; font-weight: 500;
+      color: var(--ink-dim); border: 1px solid var(--line); background: transparent;
+      cursor: pointer; transition: border-color .2s, color .2s;
+    }
+    .ss-btn-g:hover { border-color: rgba(236,233,224,.3); color: var(--ink); }
+
+    /* hero stats */
+    .ss-hero-stats { display: flex; gap: 36px; flex-wrap: wrap; margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--line); }
+    .ss-stat-n { font-family: var(--font-display); font-size: 1.85rem; font-weight: 800; color: var(--ink); line-height: 1; }
+    .ss-stat-l { font-size: 0.68rem; font-weight: 500; color: var(--ink-dim); margin-top: 4px; text-transform: uppercase; letter-spacing: .08em; }
+
+    /* timeline */
+    .ss-timeline { position: relative; padding-left: 32px; }
+    .ss-timeline::before { content: ''; position: absolute; left: 9px; top: 10px; bottom: 10px; width: 1px; background: var(--line); }
+    .ss-tl-item { position: relative; margin-bottom: 36px; }
+    .ss-tl-dot { position: absolute; left: -32px; top: 4px; width: 18px; height: 18px; border-radius: 50%; background: var(--bg-soft); border: 2px solid var(--line); display: flex; align-items: center; justify-content: center; }
+    .ss-tl-dot.active { background: rgba(255,92,0,.1); border-color: var(--accent); }
+    .ss-tl-dot.active::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+    .ss-tl-phase { font-size: 0.7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
+    .ss-tl-title { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+    .ss-tl-items { list-style: none; padding: 0; }
+    .ss-tl-items li { font-size: 0.82rem; color: var(--ink-dim); line-height: 1.65; padding: 3px 0 3px 16px; position: relative; }
+    .ss-tl-items li::before { content: '→'; position: absolute; left: 0; color: var(--ink-dim); font-size: 0.7rem; top: 4px; opacity: .4; }
+
+    @media (max-width: 800px) {
+      .ss-prob-grid, .ss-feat-grid, .ss-scores-wrap { grid-template-columns: 1fr; }
+      .ss-scores-wrap { grid-template-columns: repeat(2,1fr); }
+      .ss-stack-grid { grid-template-columns: 1fr 1fr; }
+      .ss-decision { grid-template-columns: 1fr; gap: 6px; }
+      .ss-sig-row { grid-template-columns: 1fr 40px 1fr; }
+    }
+  </style>
+</head>
+<body class="case-page">
+  <div class="page-fade" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="spotlight" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"><span class="cursor__label">View</span></div>
+  <div class="cursor-dot" aria-hidden="true"></div>
+
+  <!-- NAV -->
+  <header class="nav">
+    <a href="../index.html" class="nav__logo" data-magnetic>VVN<span class="nav__dot">.</span></a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="../index.html#work" class="nav__back" data-magnetic>
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        All work
+      </a>
+      <a href="../index.html#contact" class="nav__cta" data-magnetic>Let's talk</a>
+    </nav>
+    <button class="nav__toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+  </header>
+
+  <div class="menu" aria-hidden="true">
+    <a href="../index.html#work" class="menu__link">Work</a>
+    <a href="../index.html#services" class="menu__link">Services</a>
+    <a href="../index.html#process" class="menu__link">Process</a>
+    <a href="../index.html#about" class="menu__link">About</a>
+    <a href="../index.html#contact" class="menu__link">Contact</a>
+  </div>
+
+  <main class="case-wrap" id="top">
+
+    <!-- HERO -->
+    <section class="case-hero">
+      <p class="case-hero__eyebrow"><span class="idx">Product Build</span> · <span>June 2026</span></p>
+      <h1 class="case-hero__title">SignalShift</h1>
+      <p class="case-hero__sub" data-reveal>
+        A real-time algorithm intelligence platform — monitors algorithm health across 5 social
+        platforms, maps 40+ trending topics across 8 global regions, and generates format-specific
+        content plans so creators always know what to post and when.
+      </p>
+
+      <div class="case-meta" data-reveal>
+        <div class="case-meta__item"><span class="case-meta__k">Role</span><span class="case-meta__v">Product Design &amp; Full-Stack Dev</span></div>
+        <div class="case-meta__item"><span class="case-meta__k">Stack</span><span class="case-meta__v">Next.js 14 · TypeScript · SQLite</span></div>
+        <div class="case-meta__item"><span class="case-meta__k">Timeline</span><span class="case-meta__v">4 Weeks · June 2026</span></div>
+        <div class="case-meta__item"><span class="case-meta__k">Type</span><span class="case-meta__v">Product Build</span></div>
+      </div>
+
+      <div class="ss-btns" style="margin-top: 2rem;" data-reveal>
+        <a class="ss-btn-p" href="signalshift_demo.html">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Live Demo
+        </a>
+        <div class="ss-hero-stats">
+          <div><div class="ss-stat-n">5</div><div class="ss-stat-l">Platforms</div></div>
+          <div><div class="ss-stat-n">8</div><div class="ss-stat-l">Regions</div></div>
+          <div><div class="ss-stat-n">40+</div><div class="ss-stat-l">Topics</div></div>
+          <div><div class="ss-stat-n">37</div><div class="ss-stat-l">Source Files</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLATFORM STATUS BAR -->
+    <div class="ss-plat-bar" data-reveal>
+      <div class="ss-plat-inner">
+        <div class="ss-pb up">Instagram <span class="ss-pb-score">74 · Boosting</span></div>
+        <div class="ss-pb up">TikTok <span class="ss-pb-score">63 · Stable</span></div>
+        <div class="ss-pb up">LinkedIn <span class="ss-pb-score">87 · Boosting</span></div>
+        <div class="ss-pb dn">YouTube <span class="ss-pb-score">55 · Suppressed</span></div>
+        <div class="ss-pb dn">X (Twitter) <span class="ss-pb-score">43 · Suppressed</span></div>
+      </div>
+    </div>
+
+    <!-- THE PROBLEM -->
+    <section class="ss-section">
+      <div class="ss-section-label" data-reveal>The Problem</div>
+      <h2 class="ss-section-h" data-reveal>Creators post blind.</h2>
+      <p class="ss-section-sub" data-reveal>Every serious content creator faces the same three problems — and there was no single tool solving all of them.</p>
+      <div class="ss-prob-grid" data-reveal>
+        <div class="ss-prob-card r">
+          <div class="ss-prob-num">Problem 01</div>
+          <div class="ss-prob-title">Algorithm Blindness</div>
+          <div class="ss-prob-desc">When engagement drops, creators can't tell if it's their content, an algorithm shift, or random variance. Without a diagnosis, any response is guesswork.</div>
+        </div>
+        <div class="ss-prob-card a">
+          <div class="ss-prob-num">Problem 02</div>
+          <div class="ss-prob-title">Siloed Trend Intelligence</div>
+          <div class="ss-prob-desc">Trending topics are scattered across Reddit, X, Google Trends, and news sites — all requiring separate visits, with no synthesis or regional depth.</div>
+        </div>
+        <div class="ss-prob-card b">
+          <div class="ss-prob-num">Problem 03</div>
+          <div class="ss-prob-title">Generic Content Advice</div>
+          <div class="ss-prob-desc">"Post consistently" is not advice. Creators need format-specific hooks for their niche — not platform-generic tips that apply to everyone and help no one.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- THE INSPIRATION -->
+    <section class="ss-section">
+      <div class="ss-section-label" data-reveal>The Inspiration</div>
+      <h2 class="ss-section-h" data-reveal>The GCI for social media.</h2>
+      <p class="ss-section-sub" data-reveal>I found the idea by studying <strong style="color:var(--ink)">gulfcorridorindex.com</strong> — a real-time intelligence dashboard for Strait of Hormuz shipping traffic. It monitors corridor health via composite signals, fires threshold alerts, and gives operators a 0–100 score to act on.</p>
+      <div class="ss-callout" data-reveal>
+        <span style="font-size:1.2rem;flex-shrink:0;margin-top:2px">💡</span>
+        <div>I asked: what other domains have opaque, high-stakes, signal-detectable shifts? <strong>Social media algorithms.</strong> They change silently, cut creator reach overnight, but are traceable via engagement data, community complaint spikes, and platform changelogs — exactly like shipping corridor risk is traced via vessel positions and geopolitics.</div>
+      </div>
+    </section>
+
+    <!-- ALGORITHM HEALTH MONITOR -->
+    <section class="ss-section">
+      <div class="ss-section-label" data-reveal>Algorithm Health Monitor</div>
+      <h2 class="ss-section-h" data-reveal>A score for every platform, in real time.</h2>
+      <p class="ss-section-sub" data-reveal>Each platform gets a composite score (0–100) built from four independent signals. Scores update every 30 minutes and trigger alerts when thresholds are crossed.</p>
+
+      <div class="ss-scores-wrap" data-reveal>
+        <div class="ss-score-card">
+          <div class="ss-score-ring">
+            <svg viewBox="0 0 72 72"><circle cx="36" cy="36" r="28" fill="none" stroke="rgba(236,233,224,.07)" stroke-width="5"/><circle cx="36" cy="36" r="28" fill="none" stroke="#1DB97E" stroke-width="5" stroke-linecap="round" stroke-dasharray="175.9" stroke-dashoffset="46" transform="rotate(-90 36 36)"/></svg>
+            <div class="ss-score-num" style="color:#1DB97E">74</div>
+          </div>
+          <div class="ss-sc-name">Instagram</div>
+          <span class="ss-sc-badge up">Boosting</span>
+        </div>
+        <div class="ss-score-card">
+          <div class="ss-score-ring">
+            <svg viewBox="0 0 72 72"><circle cx="36" cy="36" r="28" fill="none" stroke="rgba(236,233,224,.07)" stroke-width="5"/><circle cx="36" cy="36" r="28" fill="none" stroke="#1DB97E" stroke-width="5" stroke-linecap="round" stroke-dasharray="175.9" stroke-dashoffset="65" transform="rotate(-90 36 36)"/></svg>
+            <div class="ss-score-num" style="color:#1DB97E">63</div>
+          </div>
+          <div class="ss-sc-name">TikTok</div>
+          <span class="ss-sc-badge mid">Stable</span>
+        </div>
+        <div class="ss-score-card">
+          <div class="ss-score-ring">
+            <svg viewBox="0 0 72 72"><circle cx="36" cy="36" r="28" fill="none" stroke="rgba(236,233,224,.07)" stroke-width="5"/><circle cx="36" cy="36" r="28" fill="none" stroke="#1DB97E" stroke-width="5" stroke-linecap="round" stroke-dasharray="175.9" stroke-dashoffset="22" transform="rotate(-90 36 36)"/></svg>
+            <div class="ss-score-num" style="color:#1DB97E">87</div>
+          </div>
+          <div class="ss-sc-name">LinkedIn</div>
+          <span class="ss-sc-badge up">Boosting</span>
+        </div>
+        <div class="ss-score-card">
+          <div class="ss-score-ring">
+            <svg viewBox="0 0 72 72"><circle cx="36" cy="36" r="28" fill="none" stroke="rgba(236,233,224,.07)" stroke-width="5"/><circle cx="36" cy="36" r="28" fill="none" stroke="#E8534A" stroke-width="5" stroke-linecap="round" stroke-dasharray="175.9" stroke-dashoffset="79" transform="rotate(-90 36 36)"/></svg>
+            <div class="ss-score-num" style="color:#E8534A">55</div>
+          </div>
+          <div class="ss-sc-name">YouTube</div>
+          <span class="ss-sc-badge dn">Suppressed</span>
+        </div>
+        <div class="ss-score-card">
+          <div class="ss-score-ring">
+            <svg viewBox="0 0 72 72"><circle cx="36" cy="36" r="28" fill="none" stroke="rgba(236,233,224,.07)" stroke-width="5"/><circle cx="36" cy="36" r="28" fill="none" stroke="#E8534A" stroke-width="5" stroke-linecap="round" stroke-dasharray="175.9" stroke-dashoffset="101" transform="rotate(-90 36 36)"/></svg>
+            <div class="ss-score-num" style="color:#E8534A">43</div>
+          </div>
+          <div class="ss-sc-name">X (Twitter)</div>
+          <span class="ss-sc-badge dn">Suppressed</span>
+        </div>
+      </div>
+
+      <div class="ss-sig-box" data-reveal>
+        <div class="ss-sig-label-row">Score Composition — 4-Signal Weighted Average</div>
+        <div class="ss-sig-row">
+          <span class="ss-sig-label">Engagement Deviation</span>
+          <span class="ss-sig-pct">35%</span>
+          <div class="ss-sig-track"><div class="ss-sig-fill" style="width:35%"></div></div>
+        </div>
+        <div class="ss-sig-row">
+          <span class="ss-sig-label">Creator Complaint Volume</span>
+          <span class="ss-sig-pct">25%</span>
+          <div class="ss-sig-track"><div class="ss-sig-fill" style="width:25%"></div></div>
+        </div>
+        <div class="ss-sig-row">
+          <span class="ss-sig-label">Platform Changelog Tracking</span>
+          <span class="ss-sig-pct">20%</span>
+          <div class="ss-sig-track"><div class="ss-sig-fill" style="width:20%"></div></div>
+        </div>
+        <div class="ss-sig-row">
+          <span class="ss-sig-label">Trend Alignment</span>
+          <span class="ss-sig-pct">20%</span>
+          <div class="ss-sig-track"><div class="ss-sig-fill" style="width:20%"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT I BUILT -->
+    <section class="ss-section">
+      <div class="ss-section-label" data-reveal>What I Built</div>
+      <h2 class="ss-section-h" data-reveal>Six modules, one platform.</h2>
+      <p class="ss-section-sub" data-reveal>Every feature was designed around a specific creator workflow — from morning platform check to building a full week of content in one session.</p>
+      <div class="ss-feat-grid" data-reveal>
+        <div class="ss-feat-card">
+          <div class="ss-feat-icon">📡</div>
+          <div class="ss-feat-title">Algorithm Health Monitor</div>
+          <div class="ss-feat-desc">Animated SVG score rings per platform. Boosting / Stable / Suppressed / Volatile status with tactical posting recommendations derived from live signal readings.</div>
+          <div class="ss-feat-chips"><span class="ss-chip">5 Platforms</span><span class="ss-chip">SVG Rings</span><span class="ss-chip">Live Signals</span></div>
+        </div>
+        <div class="ss-feat-card">
+          <div class="ss-feat-icon">🌍</div>
+          <div class="ss-feat-title">Global Trend Radar</div>
+          <div class="ss-feat-desc">40+ trending topics across 8 regions including India (dedicated, 10 topics). Filter by region, category, or niche. Each topic shows velocity, volume, and posting window.</div>
+          <div class="ss-feat-chips"><span class="ss-chip">8 Regions</span><span class="ss-chip">India Region</span><span class="ss-chip">Category Filter</span></div>
+        </div>
+        <div class="ss-feat-card">
+          <div class="ss-feat-icon">🎯</div>
+          <div class="ss-feat-title">Niche Personalization Engine</div>
+          <div class="ss-feat-desc">Type your niche and every content angle rewrites itself through that lens. A fitness creator sees different hooks than a finance creator — even for the same trending topic.</div>
+          <div class="ss-feat-chips"><span class="ss-chip">Free-text Input</span><span class="ss-chip">Dynamic Rewrite</span></div>
+        </div>
+        <div class="ss-feat-card">
+          <div class="ss-feat-icon">📋</div>
+          <div class="ss-feat-title">Multi-Format Plan Builder</div>
+          <div class="ss-feat-desc">4 formats per platform × 3 ready-to-use hook ideas each. Select your platforms, enter your niche, pick a trend — get a complete, executable content plan instantly.</div>
+          <div class="ss-feat-chips"><span class="ss-chip">60+ Ideas</span><span class="ss-chip">Per-platform Formats</span></div>
+        </div>
+        <div class="ss-feat-card">
+          <div class="ss-feat-icon">📅</div>
+          <div class="ss-feat-title">Weekly Master Plan</div>
+          <div class="ss-feat-desc">Top 7 trending topics, one per day, best platform auto-selected by algorithm score. A full week's editorial calendar in one click — no manual scheduling.</div>
+          <div class="ss-feat-chips"><span class="ss-chip">7-day Calendar</span><span class="ss-chip">Auto-platform Select</span></div>
+        </div>
+        <div class="ss-feat-card">
+          <div class="ss-feat-icon">🔔</div>
+          <div class="ss-feat-title">Alert Engine</div>
+          <div class="ss-feat-desc">Configure score thresholds per platform. Get alerted the moment algorithm health crosses a level — each alert includes the score change, trigger, and a recommended action.</div>
+          <div class="ss-feat-chips"><span class="ss-chip">Threshold Config</span><span class="ss-chip">Action Guidance</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORMAT INTELLIGENCE -->
+    <section class="ss-section">
+      <div class="ss-section-label" data-reveal>Content Intelligence</div>
+      <h2 class="ss-section-h" data-reveal>Format-specific, not platform-generic.</h2>
+      <p class="ss-section-sub" data-reveal>Every platform gets four distinct content formats. Every format gets three specific hook ideas. That's 60+ ready-to-use angles for any trend.</p>
+      <div data-reveal style="overflow-x:auto">
+        <table class="ss-fmt-table">
+          <thead>
+            <tr><th>Platform</th><th>Format 1</th><th>Format 2</th><th>Format 3</th><th>Format 4</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Instagram</td><td>Carousel (5–8 slides)</td><td>Reel 15–30s</td><td>Reel 60–90s</td><td>Story poll</td></tr>
+            <tr><td>TikTok</td><td>Video 15–30s</td><td>Video 60–90s</td><td>Duet / Stitch</td><td>Series hook</td></tr>
+            <tr><td>LinkedIn</td><td>Text post</td><td>Poll</td><td>Document carousel</td><td>Article</td></tr>
+            <tr><td>YouTube</td><td>Short &lt;60s</td><td>Long-form 8–15 min</td><td>Long-form 20+ min</td><td>Community post</td></tr>
+            <tr><td>X (Twitter)</td><td>Thread (7 tweets)</td><td>Single tweet</td><td>Poll</td><td>Quote + reply</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TECH STACK -->
+    <section class="ss-section">
+      <div class="ss-section-label" data-reveal>Tech Stack</div>
+      <h2 class="ss-section-h" data-reveal>Built with the right tools for V1.</h2>
+      <p class="ss-section-sub" data-reveal>Every choice was deliberate — optimized for speed of build, real data from day one, and a clean upgrade path to production scale.</p>
+      <div class="ss-stack-grid" data-reveal>
+        <div class="ss-stack-item"><div class="ss-stack-icon">▲</div><div><div class="ss-stack-name">Next.js 14</div><div class="ss-stack-role">App Router + SSR</div></div></div>
+        <div class="ss-stack-item"><div class="ss-stack-icon" style="color:#3178C6">TS</div><div><div class="ss-stack-name">TypeScript</div><div class="ss-stack-role">Full-stack type safety</div></div></div>
+        <div class="ss-stack-item"><div class="ss-stack-icon" style="color:#38BDF8">TW</div><div><div class="ss-stack-name">Tailwind CSS</div><div class="ss-stack-role">Utility-first styling</div></div></div>
+        <div class="ss-stack-item"><div class="ss-stack-icon">🔐</div><div><div class="ss-stack-name">NextAuth.js</div><div class="ss-stack-role">Auth + session mgmt</div></div></div>
+        <div class="ss-stack-item"><div class="ss-stack-icon">🗄️</div><div><div class="ss-stack-name">SQLite</div><div class="ss-stack-role">better-sqlite3, zero config</div></div></div>
+        <div class="ss-stack-item"><div class="ss-stack-icon">📊</div><div><div class="ss-stack-name">Google Trends</div><div class="ss-stack-role">Trend velocity data</div></div></div>
+        <div class="ss-stack-item"><div class="ss-stack-icon">🤖</div><div><div class="ss-stack-name">Reddit API</div><div class="ss-stack-role">Complaint signal source</div></div></div>
+        <div class="ss-stack-item"><div class="ss-stack-icon">📈</div><div><div class="ss-stack-name">Recharts</div><div class="ss-stack-role">Score trend charts</div></div></div>
+      </div>
+    </section>
+
+    <!-- BUILD PROCESS -->
+    <section class="ss-section">
+      <div class="ss-section-label" data-reveal>Build Process</div>
+      <h2 class="ss-section-h" data-reveal>4 weeks, start to finish.</h2>
+      <p class="ss-section-sub" data-reveal>From analyzing a shipping intelligence dashboard to a full-stack social media intelligence product.</p>
+      <div class="ss-timeline" data-reveal>
+        <div class="ss-tl-item">
+          <div class="ss-tl-dot active"></div>
+          <div class="ss-tl-phase">Week 1</div>
+          <div class="ss-tl-title">Research &amp; Concept Definition</div>
+          <ul class="ss-tl-items">
+            <li>Analyzed gulfcorridorindex.com: UX patterns, scoring model, alert architecture</li>
+            <li>Mapped GCI concept to social media: corridor health → algorithm health</li>
+            <li>Defined scope: 5 platforms, all 3 user types, freemium model, real data from day 1</li>
+            <li>Designed 4-signal scoring architecture with weights before writing any code</li>
+          </ul>
+        </div>
+        <div class="ss-tl-item">
+          <div class="ss-tl-dot active"></div>
+          <div class="ss-tl-phase">Week 2</div>
+          <div class="ss-tl-title">Full-Stack V1 Build (37 Files)</div>
+          <ul class="ss-tl-items">
+            <li>Scaffolded Next.js 14 App Router project with TypeScript + Tailwind</li>
+            <li>Built auth: NextAuth.js credentials provider + bcrypt + SQLite users table</li>
+            <li>Implemented scoring engine (lib/scoring/index.ts) with all 4 signals</li>
+            <li>Wired Google Trends + Reddit APIs; built /api/signals, /api/trending, /api/alerts routes</li>
+          </ul>
+        </div>
+        <div class="ss-tl-item">
+          <div class="ss-tl-dot active"></div>
+          <div class="ss-tl-phase">Week 3</div>
+          <div class="ss-tl-title">Interactive Demo — 6 Iterations</div>
+          <ul class="ss-tl-items">
+            <li>Built self-contained HTML/JS widget (no build step, no server required)</li>
+            <li>V1–V3: Dashboard with animated SVG score rings and platform status</li>
+            <li>V4: Trends tab added — hit token limit, full rebuild required</li>
+            <li>V5: Rebuilt with compact data format; V6: Final with all features</li>
+          </ul>
+        </div>
+        <div class="ss-tl-item">
+          <div class="ss-tl-dot active"></div>
+          <div class="ss-tl-phase">Week 4</div>
+          <div class="ss-tl-title">Feature Expansion</div>
+          <ul class="ss-tl-items">
+            <li>India region: 10 dedicated topics (cricket, Bollywood, NRI, startup stories, shaadi, street food)</li>
+            <li>PFMT engine: 4 formats × 3 hook ideas per platform — 60+ content angles per trend</li>
+            <li>Niche personalization: free-text input rewrites all content angles through creator's lens</li>
+            <li>Weekly master plan: 7 topics × 1 per day, best platform auto-selected by score</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- KEY DECISIONS -->
+    <section class="ss-section">
+      <div class="ss-section-label" data-reveal>Product Decisions</div>
+      <h2 class="ss-section-h" data-reveal>Every choice was deliberate.</h2>
+      <p class="ss-section-sub" data-reveal>The best decisions were the ones about what not to build. Here are the most important trade-offs in V1.</p>
+      <div data-reveal>
+        <div class="ss-decision">
+          <div class="ss-decision-k">All 5 platforms at once</div>
+          <div class="ss-decision-v">Algorithm shifts on one platform often precede or correlate with others. Cross-platform intelligence is the core value proposition — starting with one would undercut the entire product.</div>
+        </div>
+        <div class="ss-decision">
+          <div class="ss-decision-k">Real APIs, zero mocks</div>
+          <div class="ss-decision-v">Mocked data destroys demo credibility for a product whose core claim is "real-time intelligence." Google Trends and Reddit JSON both work without API keys — there's no excuse for fake data.</div>
+        </div>
+        <div class="ss-decision">
+          <div class="ss-decision-k">India as dedicated region</div>
+          <div class="ss-decision-v">India's creator economy is the fastest-growing globally. Cricket, Bollywood, NRI culture, and shaadi content are categorically different from APAC averages — lumping them together makes trend data useless for Indian creators.</div>
+        </div>
+        <div class="ss-decision">
+          <div class="ss-decision-k">SQLite for V1</div>
+          <div class="ss-decision-v">Zero config, embedded, same query logic migrates to Postgres in V2. Over-engineering the database before proving the product is a classic mistake.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGER -->
+    <nav class="case-pager" aria-label="Case studies">
+      <a href="../index.html#work" class="case-pager__item case-pager__item--prev" data-magnetic>
+        <span class="case-pager__dir">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back
+        </span>
+        <span class="case-pager__name">All Work</span>
+      </a>
+      <a href="../index.html#contact" class="case-pager__item case-pager__item--next" data-magnetic>
+        <span class="case-pager__dir">Contact <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="case-pager__name">Let's talk</span>
+      </a>
+    </nav>
+
+    <div class="case-allwork">
+      <a href="../index.html#work" data-magnetic>View all work</a>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <p class="footer__copy">SignalShift — Algorithm Intelligence Platform · Built by Vishnu Nakkella · 2026</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/fun.js" defer></script>
+</body>
+</html>
