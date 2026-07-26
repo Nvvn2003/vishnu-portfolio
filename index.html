@@ -138,6 +138,41 @@
         </p>
       </div>
 
+      <!-- FEATURED CASE -->
+      <a class="feat" href="case/quintet.html" data-reveal data-magnetic
+         onclick="if(window.navigateTo){navigateTo('case/quintet.html');return false;}">
+        <div class="feat__media">
+          <video class="q-loop" muted loop playsinline preload="metadata"
+                 poster="assets/brand/quintet-web/lineup.jpg"
+                 aria-label="QUINTET brand film — One Man, Five Moments">
+            <source src="assets/brand/quintet-web/quintet-film.mp4" type="video/mp4" />
+          </video>
+        </div>
+        <div class="feat__body">
+          <span class="feat__eyebrow">Featured Case · Brand Strategy &amp; Identity</span>
+          <h3 class="feat__title">QUINTET</h3>
+          <p class="feat__tag">Everything you need. Nothing to figure out.</p>
+          <p class="feat__desc">
+            A luxury men's fragrance house built on the five classical elements — where the
+            philosophy is the product architecture. Strategy, naming, identity, packaging
+            system, pricing, campaign and film, end to end.
+          </p>
+          <div class="feat__tags">
+            <span>Brand Strategy</span><span>Naming</span><span>Identity</span>
+            <span>Packaging</span><span>Campaign</span><span>Film</span>
+          </div>
+          <span class="feat__cta">Read the case study →</span>
+
+          <div class="feat__thumbs" aria-hidden="true">
+            <img src="assets/brand/quintet-web/water.jpg"  alt="" loading="lazy" />
+            <img src="assets/brand/quintet-web/earth.jpg"  alt="" loading="lazy" />
+            <img src="assets/brand/quintet-web/fire.jpg"   alt="" loading="lazy" />
+            <img src="assets/brand/quintet-web/air.jpg"    alt="" loading="lazy" />
+            <img src="assets/brand/quintet-web/aether.jpg" alt="" loading="lazy" />
+          </div>
+        </div>
+      </a>
+
       <div class="gallery__rows" id="galleryRows" aria-label="Selected work gallery"></div>
 
     </section>
@@ -474,5 +509,28 @@
   <script src="js/gallery.js" defer></script>
   <!-- easter eggs (purely visual — safe to delete this line + js/fun.js) -->
   <script src="js/fun.js" defer></script>
+  <script>
+    /* Silent looping previews — play only while on screen. */
+    (function(){
+      var vids = document.querySelectorAll('.q-loop');
+      if (!vids.length) return;
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      vids.forEach(function(v){ v.muted = true; v.defaultMuted = true; v.volume = 0; });
+      if (reduce) return;
+
+      if (!('IntersectionObserver' in window)) {
+        vids.forEach(function(v){ v.play().catch(function(){}); });
+        return;
+      }
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          var v = e.target;
+          if (e.isIntersecting) { v.play().catch(function(){}); }
+          else if (!v.paused) { v.pause(); }
+        });
+      }, { threshold: 0.25 });
+      vids.forEach(function(v){ io.observe(v); });
+    })();
+  </script>
 </body>
 </html>

@@ -10,3 +10,7 @@ desktop.ini
 # Logs / temp
 *.log
 *.tmp
+
+# Full-resolution source art (kept locally only — the site ships the
+# web-optimised copies in assets/brand/quintet-web/)
+assets/brand/Quintet/
