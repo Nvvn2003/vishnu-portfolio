@@ -1,0 +1,76 @@
+/* =========================================================
+   ABOUT SPREAD — text set into the photo's empty floor.
+   Every zone was derived from a row-by-row pixel scan of
+   assets/about/topview-*.jpg (rug, desk, laptop, chair) with a
+   2.5% breathing margin. Zones are % of the image and type is in
+   cqw, so the composition scales as one piece. Reads as a Z:
+   headline → quote → story → close + button.
+   If the photo is ever swapped, these zones must be re-derived.
+   ========================================================= */
+.sp{
+  --ink-sp:#12100D;   /* charcoal — ≥5.6:1 on the darkest floor pixel it sits on */
+  --cream:#E9E4DB;
+  container-type:inline-size;
+  position:relative; z-index:1;
+  background:var(--cream); color:var(--ink-sp);
+}
+.sp__stage{ position:relative; }
+.sp__img{ display:block; width:100%; height:auto; aspect-ratio:4/5; object-fit:cover; object-position:58% 52%; }
+
+/* stacked: phones, tablets, small laptops */
+.sp__zones{ padding:2rem var(--pad) 0; display:grid; gap:1.5rem; }
+.sp__zone{ max-width:62ch; }
+.sp__head{ margin:0; color:var(--ink-sp); font-family:var(--font-display); font-weight:800; font-size:clamp(2.6rem,12vw,4.2rem); line-height:.92; letter-spacing:-.03em; }
+.sp__body p{ color:var(--ink-sp); line-height:1.65; margin:0 0 1em; font-size:1.02rem; }
+.sp__body p:last-child{ margin-bottom:0; }
+.sp__quote{ margin:0; color:var(--ink-sp); font-weight:500; line-height:1.42; padding-left:.9em; border-left:3px solid #ff5c00; font-size:1.2rem; }
+.sp__close{ margin:0; color:var(--ink-sp); font-family:var(--font-display); font-weight:700; line-height:1.18; letter-spacing:-.01em; font-size:1.35rem; }
+.sp__cta{
+  display:inline-flex; align-items:center; gap:.5em; margin-top:1rem;
+  background:#ff5c00; color:var(--ink-sp); font-weight:700;
+  padding:.75em 1.3em; border-radius:99px; text-decoration:none;
+}
+.sp__cta:hover{ background:#ff7a2e; }
+.sp__cta:focus-visible{ outline:3px solid var(--ink-sp); outline-offset:3px; }
+
+/* education strip on the cream directly under the photo */
+.sp__edu{ padding:2rem var(--pad) 2.5rem; }
+.sp__label{
+  display:block; margin:0 0 .9rem; color:var(--ink-sp);
+  font-family:var(--font-display); font-weight:700;
+  font-size:.74rem; letter-spacing:.16em; text-transform:uppercase;
+}
+.sp__label::before{ content:""; display:inline-block; width:.6em; height:.6em; background:#ff5c00; margin-right:.55em; vertical-align:.02em; }
+.sp__edu ul{ list-style:none; margin:0; padding:0; display:grid; }
+.sp__edu li{ padding:.95rem 0; border-top:1px solid rgba(18,16,13,.2); display:grid; grid-template-columns:1fr auto; gap:.15rem 1rem; color:var(--ink-sp); }
+.sp__edu li:last-child{ border-bottom:1px solid rgba(18,16,13,.2); }
+.sp__edu-school{ font-weight:600; font-size:1rem; }
+.sp__edu-year{ font-size:.9rem; font-variant-numeric:tabular-nums; }
+.sp__edu-detail{ grid-column:1 / -1; font-size:.92rem; }
+
+/* overlay — 1260px is the smallest width where every overlay size stays
+   readable, and still catches 1280 laptops after the scrollbar */
+@container (min-width: 1260px){
+  .sp__img{ aspect-ratio:2400/1350; object-position:center; }
+  .sp__zones{ position:absolute; inset:0; padding:0; display:block; }
+  .sp__zone{ position:absolute; max-width:none; }
+  .sp__zone--end{ display:flex; flex-direction:column; justify-content:flex-end; }
+
+  /* top-left — floor clear to 35.7% for rows 4–18% */
+  .sp__zone--head{ left:4%; top:5%; width:29%; height:12%; }
+  .sp__head{ font-size:3.6cqw; }
+  /* top-right — floor clear from 68.3% for rows 4–25% */
+  .sp__zone--quote{ left:71%; top:5%; width:25%; height:19%; }
+  .sp__quote{ font-size:1.45cqw; border-left-width:.22cqw; padding-left:1.1cqw; }
+  /* bottom-left — floor clear to 27.8% for rows 59–96% */
+  .sp__zone--body{ left:4%; top:60%; width:21%; height:35%; }
+  .sp__body p{ font-size:1.25cqw; }
+  /* bottom-right — floor clear from 71.5% for rows 59–96% */
+  .sp__zone--close{ left:74%; top:60%; width:22%; height:35%; }
+  .sp__close{ font-size:1.55cqw; }
+  .sp__cta{ font-size:1cqw; margin-top:1.3cqw; padding:.85cqw 1.45cqw; align-self:flex-start; }
+
+  .sp__edu{ padding:2.4cqw 4% 3cqw; }
+  .sp__edu ul{ grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 3cqw; }
+  .sp__edu li, .sp__edu li:last-child{ border-bottom:0; }
+}
