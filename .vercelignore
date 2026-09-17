@@ -1,16 +1,9 @@
-# Files that belong in the repo but must not be publicly downloadable
-# from the live site. Vercel leaves these out of every deployment.
+# Files that belong in this folder but aren't web pages,
+# so they're not made downloadable on vishnunakkella.me.
 
-# local development only
-server.ps1
-.claude/
-
-# GitHub Pages config — not used by Vercel
+# GitHub Pages settings
 CNAME
 .nojekyll
 
-# internal notes and helper text
+# the guide to this folder
 README.md
-PLACEHOLDERS.md
-assets/PUT-IMAGES-HERE.txt
-assets/gallery/HOW-TO-ADD-WORK.txt

@@ -1,16 +1,9 @@
-﻿# OS
+# Files your computer or editor creates automatically.
+# They're never part of the website, so they're kept out of it.
 .DS_Store
 Thumbs.db
 desktop.ini
-
-# Editors
 .vscode/
 .idea/
-
-# Logs / temp
 *.log
 *.tmp
-
-# Full-resolution source art (kept locally only — the site ships the
-# web-optimised copies in assets/brand/quintet-web/)
-assets/brand/Quintet/

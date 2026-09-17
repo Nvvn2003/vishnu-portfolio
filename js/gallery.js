@@ -9,15 +9,15 @@
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const ITEMS = [
-    { src: "assets/gallery/Pstrbyads.png",           title: "Poster Boy Ads — Brand Identity",  cat: "Branding" },
-    { src: "assets/gallery/BB Building Mockup.png",  title: "BB Building — Architectural Mock", cat: "Art Direction" },
-    { src: "assets/gallery/Demo Invite.png",         title: "Demo Invite — Event Design",       cat: "Print" },
-    { src: "assets/gallery/Atom Thumbnail.png",      title: "Atom — Content Thumbnail",         cat: "Content" },
-    { src: "assets/gallery/Ozone Thumb.png",         title: "Ozone — Content Thumbnail",        cat: "Content" },
-    { src: "assets/gallery/Fish Aqua-Recovered.png", title: "Fish Aqua — Visual Identity",      cat: "Branding" },
-    { src: "assets/gallery/Iphone Winter 1.png",     title: "iPhone Winter — Product Shoot",    cat: "Product" },
-    { src: "assets/gallery/TI MCKP.png",             title: "TI — Brand Mockup",                cat: "Brand" },
-    { src: "assets/gallery/%E0%B0%AE%E0%B0%BF%E0%B0%B8%E0%B1%8D%E0%B0%B8%E0%B0%AE%E0%B1%8D%E0%B0%AE.png", title: "Missamma — Campaign", cat: "Campaign" },
+    { src: "assets/gallery/poster-boy-ads.png",      title: "Poster Boy Ads — Brand Identity",  cat: "Branding" },
+    { src: "assets/gallery/bb-building-mockup.png",  title: "BB Building — Architectural Mock", cat: "Art Direction" },
+    { src: "assets/gallery/demo-invite.png",         title: "Demo Invite — Event Design",       cat: "Print" },
+    { src: "assets/gallery/atom-thumbnail.png",      title: "Atom — Content Thumbnail",         cat: "Content" },
+    { src: "assets/gallery/ozone-thumbnail.png",     title: "Ozone — Content Thumbnail",        cat: "Content" },
+    { src: "assets/gallery/fish-aqua.png",           title: "Fish Aqua — Visual Identity",      cat: "Branding" },
+    { src: "assets/gallery/iphone-winter.png",       title: "iPhone Winter — Product Shoot",    cat: "Product" },
+    { src: "assets/gallery/ti-mockup.png",           title: "TI — Brand Mockup",                cat: "Brand" },
+    { src: "assets/gallery/missamma.png",            title: "Missamma — Campaign",              cat: "Campaign" },
   ];
 
   const wrap = document.getElementById("galleryRows");
