@@ -33,6 +33,7 @@
     Q("discovery", 1400, 1738, "The Discovery Set", "Packaging"),
     Q("payday-vertical", 1100, 1971, "The Payday Ritual", "Campaign"),
     Q("payday-square", 1400, 1400, "The Payday Ritual, Feed Format", "Social"),
+    // (gallery pieces below; their sharp versions live in assets/wall/full/)
     G("poster-boy-ads", 2000, 1391, "Poster Boy Ads — Brand Identity", "Branding"),
     G("bb-building-mockup", 2000, 1500, "BB Building — Architectural Mock", "Art Direction"),
     G("demo-invite", 1410, 2000, "Demo Invite — Event Design", "Print"),
