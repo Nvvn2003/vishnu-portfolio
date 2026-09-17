@@ -8,6 +8,19 @@ document.documentElement.classList.add("has-js");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
+/* ---------- Hide images that fail to load ----------
+   Replaces inline onerror="" handlers, which the Content Security Policy
+   blocks. Covers images that already failed before this deferred script
+   ran, and any that fail later. */
+function hideBrokenImg(img) { img.style.display = "none"; }
+document.querySelectorAll("img[data-hide-on-error]").forEach((img) => {
+  if (img.complete && img.naturalWidth === 0) hideBrokenImg(img);
+});
+document.addEventListener("error", (e) => {
+  const t = e.target;
+  if (t && t.tagName === "IMG" && t.hasAttribute("data-hide-on-error")) hideBrokenImg(t);
+}, true);
+
 /* ---------- YEAR ---------- */
 const yearEl = document.getElementById("year");
 if (yearEl) yearEl.textContent = new Date().getFullYear();

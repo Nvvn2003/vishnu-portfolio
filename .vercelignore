@@ -1,0 +1,16 @@
+# Files that belong in the repo but must not be publicly downloadable
+# from the live site. Vercel leaves these out of every deployment.
+
+# local development only
+server.ps1
+.claude/
+
+# GitHub Pages config — not used by Vercel
+CNAME
+.nojekyll
+
+# internal notes and helper text
+README.md
+PLACEHOLDERS.md
+assets/PUT-IMAGES-HERE.txt
+assets/gallery/HOW-TO-ADD-WORK.txt

@@ -303,34 +303,11 @@
     <a href="#top" class="footer__top" data-magnetic>Back to top ↑</a>
   </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" integrity="sha512-0QtkFezYmkDNj7o9F9K53WGPBBqZg0XMsBIfMZvnkPvHuxQIrbBGRGN1UGBAdlyT62Z4Pw1AM5bn3s1FeoBYHg==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
   <script src="../js/main.js" defer></script>
   <script src="../js/fun.js" defer></script>
-  <script>
-    /* Silent looping preview — only plays while on screen, so the
-       15s film never downloads or decodes for a visitor who scrolls past. */
-    (function(){
-      var vids = document.querySelectorAll('.q-loop');
-      if (!vids.length) return;
-      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      vids.forEach(function(v){ v.muted = true; v.defaultMuted = true; v.volume = 0; });
-      if (reduce) return;
-
-      if (!('IntersectionObserver' in window)) {
-        vids.forEach(function(v){ v.play().catch(function(){}); });
-        return;
-      }
-      var io = new IntersectionObserver(function(entries){
-        entries.forEach(function(e){
-          var v = e.target;
-          if (e.isIntersecting) { v.play().catch(function(){}); }
-          else if (!v.paused) { v.pause(); }
-        });
-      }, { threshold: 0.25 });
-      vids.forEach(function(v){ io.observe(v); });
-    })();
-  </script>
+  <script src="../js/loops.js" defer></script>
 </body>
 </html>

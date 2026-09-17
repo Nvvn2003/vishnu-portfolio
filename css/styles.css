@@ -740,3 +740,6 @@ body.comic-sans, body.comic-sans * { font-family: "Comic Sans MS", "Comic Sans",
 @media (prefers-reduced-motion: reduce) {
   .mq-track { animation: none; }
 }
+
+/* ---------- SPAM TRAP (contact form honeypot) ---------- */
+.hp { position: absolute !important; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
