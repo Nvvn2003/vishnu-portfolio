@@ -144,13 +144,25 @@
         <div class="ww__stage">
           <div class="ww__track"></div>
           <div class="ww__shade" aria-hidden="true"></div>
-          <div class="ww__person"><div class="ww__person-in">
-            <img src="assets/wall/vishnu-presenting-1600.png"
-                 srcset="assets/wall/vishnu-presenting-900.png 900w, assets/wall/vishnu-presenting-1600.png 1600w"
+          <!-- three layers — arms behind, body in front — so the hands can float -->
+          <div class="ww__person"><div class="ww__person-in"><div class="ww__person-stack">
+            <img class="ww__arm ww__arm--l" alt="" aria-hidden="true"
+                 src="assets/wall/vishnu-arm-left-1600.png"
+                 srcset="assets/wall/vishnu-arm-left-900.png 900w, assets/wall/vishnu-arm-left-1600.png 1600w"
+                 sizes="(max-width: 600px) 100vw, (max-width: 1000px) 70vw, min(55vw, 820px)"
+                 width="1600" height="882" />
+            <img class="ww__arm ww__arm--r" alt="" aria-hidden="true"
+                 src="assets/wall/vishnu-arm-right-1600.png"
+                 srcset="assets/wall/vishnu-arm-right-900.png 900w, assets/wall/vishnu-arm-right-1600.png 1600w"
+                 sizes="(max-width: 600px) 100vw, (max-width: 1000px) 70vw, min(55vw, 820px)"
+                 width="1600" height="882" />
+            <img class="ww__body"
+                 src="assets/wall/vishnu-body-1600.png"
+                 srcset="assets/wall/vishnu-body-900.png 900w, assets/wall/vishnu-body-1600.png 1600w"
                  sizes="(max-width: 600px) 100vw, (max-width: 1000px) 70vw, min(55vw, 820px)"
                  width="1600" height="882"
                  alt="Vishnu Nakkella in a navy suit, arms open, standing in front of his work" />
-          </div></div>
+          </div></div></div>
           <div class="ww__floor" aria-hidden="true"></div>
         </div>
       </div>
