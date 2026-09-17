@@ -134,46 +134,26 @@
         <span class="section__index">01</span>
         <h2 class="section__title" data-reveal>Selected<br/><span class="accent">Work</span></h2>
         <p class="section__note" data-reveal>
-          A living reel of the work — identities, art direction, packaging, campaigns
-          and motion. Hover to pause a row; click any piece to open it full-size.
+          A living wall of the work — identities, art direction, packaging, campaigns
+          and motion. Hover to pause it; click any piece to open it full-size.
         </p>
       </div>
 
-      <!-- FEATURED CASE -->
-      <a class="feat" href="case/quintet.html" data-reveal data-magnetic>
-        <div class="feat__media">
-          <video class="q-loop" muted loop playsinline preload="metadata"
-                 poster="assets/quintet/lineup.jpg"
-                 aria-label="QUINTET brand film — One Man, Five Moments">
-            <source src="assets/quintet/quintet-film.mp4" type="video/mp4" />
-          </video>
+      <!-- WORKS WALL — tiles are built by js/works-wall.js -->
+      <div class="ww" id="worksWall">
+        <div class="ww__stage">
+          <div class="ww__track"></div>
+          <div class="ww__shade" aria-hidden="true"></div>
+          <div class="ww__person"><div class="ww__person-in">
+            <img src="assets/wall/vishnu-presenting-1600.png"
+                 srcset="assets/wall/vishnu-presenting-900.png 900w, assets/wall/vishnu-presenting-1600.png 1600w"
+                 sizes="(max-width: 600px) 100vw, (max-width: 1000px) 70vw, min(55vw, 820px)"
+                 width="1600" height="882"
+                 alt="Vishnu Nakkella in a navy suit, arms open, standing in front of his work" />
+          </div></div>
+          <div class="ww__floor" aria-hidden="true"></div>
         </div>
-        <div class="feat__body">
-          <span class="feat__eyebrow">Featured Case · Brand Strategy &amp; Identity</span>
-          <h3 class="feat__title">QUINTET</h3>
-          <p class="feat__tag">Everything you need. Nothing to figure out.</p>
-          <p class="feat__desc">
-            A luxury men's fragrance house built on the five classical elements — where the
-            philosophy is the product architecture. Strategy, naming, identity, packaging
-            system, pricing, campaign and film, end to end.
-          </p>
-          <div class="feat__tags">
-            <span>Brand Strategy</span><span>Naming</span><span>Identity</span>
-            <span>Packaging</span><span>Campaign</span><span>Film</span>
-          </div>
-          <span class="feat__cta">Read the case study →</span>
-
-          <div class="feat__thumbs" aria-hidden="true">
-            <img src="assets/quintet/water.jpg"  alt="" loading="lazy" />
-            <img src="assets/quintet/earth.jpg"  alt="" loading="lazy" />
-            <img src="assets/quintet/fire.jpg"   alt="" loading="lazy" />
-            <img src="assets/quintet/air.jpg"    alt="" loading="lazy" />
-            <img src="assets/quintet/aether.jpg" alt="" loading="lazy" />
-          </div>
-        </div>
-      </a>
-
-      <div class="gallery__rows" id="galleryRows" aria-label="Selected work gallery"></div>
+      </div>
 
     </section>
 
@@ -454,6 +434,26 @@
     </section>
   </main>
 
+  <!-- FULL PREVIEW for the works wall (filled in by js/works-wall.js) -->
+  <div class="wlb" id="wlb" role="dialog" aria-modal="true" aria-labelledby="wlbTitle" hidden>
+    <div class="wlb__backdrop" data-close></div>
+    <div class="wlb__top">
+      <span class="wlb__count" id="wlbCount"></span>
+      <button class="wlb__btn wlb__close" type="button" aria-label="Close preview">✕</button>
+    </div>
+    <div class="wlb__stage" id="wlbStage" data-close>
+      <img class="wlb__img" id="wlbImg" alt="" />
+    </div>
+    <div class="wlb__bar">
+      <button class="wlb__btn wlb__prev" type="button" aria-label="Previous piece">←</button>
+      <div class="wlb__cap">
+        <span class="wlb__cat" id="wlbCat"></span>
+        <h3 class="wlb__title" id="wlbTitle"></h3>
+      </div>
+      <button class="wlb__btn wlb__next" type="button" aria-label="Next piece">→</button>
+    </div>
+  </div>
+
   <footer class="footer">
     <span class="footer__name">Vishnu Vardhan Naidu Nakkella</span>
     <span class="footer__copy">© <span id="year"></span> — Built to be noticed.</span>
@@ -467,9 +467,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
   <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" integrity="sha512-0QtkFezYmkDNj7o9F9K53WGPBBqZg0XMsBIfMZvnkPvHuxQIrbBGRGN1UGBAdlyT62Z4Pw1AM5bn3s1FeoBYHg==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
   <script src="js/main.js" defer></script>
-  <script src="js/gallery.js" defer></script>
+  <script src="js/works-wall.js" defer></script>
   <!-- easter eggs (purely visual — safe to delete this line + js/fun.js) -->
   <script src="js/fun.js" defer></script>
-  <script src="js/loops.js" defer></script>
 </body>
 </html>

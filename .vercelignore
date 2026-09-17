@@ -7,3 +7,10 @@ CNAME
 
 # the guide to this folder
 README.md
+
+# the original, full-quality work files. They stay in GitHub as the
+# master copies; the site shows the lighter versions in assets/wall/.
+assets/gallery
+
+# the QUINTET brand film — kept in GitHub, but no page plays it now
+assets/quintet/quintet-film.mp4

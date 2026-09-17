@@ -8,20 +8,20 @@ automatically within a minute or two.
 
 ```
 index.html            the homepage
-case/
-  quintet.html        the QUINTET case study page
 css/
   styles.css          how the whole site looks (colours, fonts, layout)
   about-spread.css    the About section with the overhead desk photo
 js/
   main.js             menu, scrolling, animations, page transitions
-  gallery.js          the scrolling "Selected Work" gallery
-  loops.js            the silent looping videos
+  works-wall.js       the "Selected Work" wall and its full-size previews
   fun.js              hidden easter eggs
 assets/
   about/              the About photo (a large and a small version)
-  gallery/            the images shown in the work gallery
-  quintet/            QUINTET images and film
+  gallery/            the original, full-quality files of the work
+  wall/               what the work wall shows: tile/ small tiles,
+                      full/ the sharp versions, plus the cut-out of you
+  quintet/            QUINTET images (shown in the wall) and the brand
+                      film, which is kept here as a master copy
 vercel.json           security settings for the live site
 .vercelignore         keeps non-website files off the live site
 .gitignore            keeps computer-generated clutter out of this folder
@@ -30,9 +30,14 @@ CNAME, .nojekyll      GitHub Pages settings
 
 ## Common changes
 
-**Add a piece to the work gallery**
-1. Put the image in `assets/gallery/`. Use a simple name with no spaces, like `new-brand.png`.
-2. In `js/gallery.js`, copy one line inside `ITEMS` and change the file name, title and category.
+**Add a piece to the work wall**
+1. Put the original in `assets/gallery/`. Use a simple name with no spaces, like `new-brand.png`.
+2. Make two web versions of it: a small one 440 pixels tall in `assets/wall/tile/`, and a
+   sharp one no bigger than 2000 pixels in `assets/wall/full/` — both keeping the original
+   shape, and both named after the piece, like `new-brand.jpg`.
+3. In `js/works-wall.js`, copy one line inside `WORKS` (the numbers are the pixel size of
+   the sharp version), then add its name to a strip in `SHEET` so it appears in the collage.
+   Tiles are sized from those numbers, so a piece is never cropped.
 
 **Change the contact email**
 The email appears in `index.html` (search for `@gmail.com`). The contact form sends
