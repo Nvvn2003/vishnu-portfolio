@@ -68,7 +68,7 @@
     const dim = "color:#8c8a82;font-size:12px;font-family:monospace";
     console.log("%cVVN.", big);
     console.log("%cWell, well, well — a fellow dev snooping in the console. 👀", ink);
-    console.log("%cLike what you see? Let's talk → hello@example.com", acc);
+    console.log("%cLike what you see? Let's talk → wheeeshnu.gfx@gmail.com", acc);
     console.log("%cPsst… a few secrets are hidden on this page:", ink);
     console.log("%c  • the Konami code  (↑ ↑ ↓ ↓ ← → ← → B A)", dim);
     console.log('%c  • type "comicsans"  😱', dim);
