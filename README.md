@@ -43,7 +43,7 @@ If an image is missing, a styled placeholder shows instead — so the site never
 Open `index.html` and replace:
 - The 4 **project** blocks (title, tags, Challenge/Approach/Outcome, year) — these are example case studies, swap in yours.
 - The **stats** numbers (`data-count="5"` etc.).
-- **Email / phone** — already set from your résumé (`vishnu_vardhan_naidu.nakkella@edu.escp.eu`, `+33 758 733 976`). Swap to a personal email later if you prefer.
+- **Email** — search `index.html` for the contact email to change it. (No phone number is published, by choice.)
 - **LinkedIn** — the contact link currently points to linkedin.com generically; paste your real profile URL into the `href` (search `Connect on LinkedIn`). Add Instagram/Behance rows if you want them.
 - **Work Experience / Education / Toolkit** — populated from your résumé (Pococare, Poster Boy Ads, JET-ESCP + ESCP/RWTH/LPU). Edit in the `#experience` and `#about` sections.
 - **Field Notes** — fill in 2–3, or delete the whole `<section class="notes">` block.
@@ -65,11 +65,13 @@ drop these images into `assets/` (missing ones fall back to labelled placeholder
 To add or remove a project: copy a `case/*.html` file, update its content, and fix the
 `Previous`/`Next` links (the `href`s near the bottom) so the chain still connects.
 
-## 3. Make the contact form actually send
-The form needs a backend (it's a static site). Easiest: **[Formspree](https://formspree.io)** (free tier).
-1. Sign up, create a form, copy your form ID.
-2. In `index.html` replace `https://formspree.io/f/your-form-id` with your real endpoint.
-That's it — submissions land in your inbox. (Until then, the `mailto:` link below the form still works.)
+## 3. The contact form
+The form posts to **[FormSubmit](https://formsubmit.co)**, which emails each enquiry to the
+address in the form's `action` — no account needed. The first submission to a new address
+sends a one-time "Activate Form" email; nothing is delivered until that link is clicked.
+
+If you change the email or switch providers, also update `form-action` in the
+Content-Security-Policy in `vercel.json`, or browsers will block the submission.
 
 ## 4. Tweak the look (optional)
 All in `css/styles.css` at the top under `:root`:
